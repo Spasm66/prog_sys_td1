@@ -16,11 +16,15 @@ int main(int argc, char **argv)
     
     if  (argc == 4) {
         fi = open(argv[1], O_RDONLY);
+        check_syscall(fi, "chemin : %s", argv[1]);
         fo = open(argv[2], O_WRONLY | O_CREAT | O_TRUNC, 0640);
         n = atol(argv[3]);
         c = malloc(sizeof(char)*n);
-        read(fi, &c, n);
-        write(fo, &c, n);
+        while(read(fi, &c, n) > 0){
+            write(fo, &c, n);
+            c = calloc(1, n);
+        }
+        free(c);
     }
     return EXIT_SUCCESS;
 }
